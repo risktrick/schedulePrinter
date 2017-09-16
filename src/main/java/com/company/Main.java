@@ -13,8 +13,8 @@ public class Main {
         Gson gson = new GsonBuilder()
                         .registerTypeAdapter(SchedulerModel.class, new SchedulerDeserializer())
                         .create();
-        SchedulerModel scheduler = gson.fromJson(JsonStrings.JSON1, SchedulerModel.class);
+        SchedulerModel schedulerModel = gson.fromJson(JsonStrings.JSON4, SchedulerModel.class);
 
-        System.out.println(scheduler);
+        System.out.println(schedulerModel);
     }
 }
