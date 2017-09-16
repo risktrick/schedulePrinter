@@ -9,6 +9,10 @@ public class DayModel {
         this.fromToList = fromToList;
     }
 
+    public List<FromTo> getFromToList() {
+        return fromToList;
+    }
+
     @Override
     public String toString() {
         return "DayModel{" +

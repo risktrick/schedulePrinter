@@ -11,4 +11,8 @@ public class FromTo {
                 ", to=" + to +
                 '}';
     }
+
+    public boolean isEmpty() {
+        return from == null && to == null;
+    }
 }
