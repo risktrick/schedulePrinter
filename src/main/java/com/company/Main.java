@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -49,9 +50,46 @@ public class Main {
         Collection<DayModel> days = scheduler.values();
 
 
+        List<FromTo> tmpFromToList = null;
+        int status = 0;
+        for (DayModel day : days) {
+            if (day != null) {
+                List<FromTo> fromToList = day.getFromToList();
+
+                if (fromToList == null) {
+                    continue;
+                }
 
 
+                if (tmpFromToList == null) {    //до этого не было сохранено
+                    tmpFromToList = fromToList; //сохраняем
+                } else {                                        //  было сохранено
+                    if (tmpFromToList.equals(fromToList)) {     //  проверяем совпдают ли они
+                        status = 1;
+                    } else {
+                        status = 2;
+                    }
+                }
+            }
+        }
+
+        System.out.println("status="+status);
+
+        if (status == 1) {
+            return toReadableString(tmpFromToList);
+        }
         return null;
+    }
+
+    private static String toReadableString(List<FromTo> tmpFromToList) {
+        String result = "";
+        for (FromTo fromTo : tmpFromToList) {
+            result = result +
+                    fromTo.getFrom().getHour() + ":" + fromTo.getFrom().getMinute() +
+                    "-" +
+                    fromTo.getTo().getHour() + ":" + fromTo.getFrom().getMinute();
+        }
+        return result;
     }
 
     private static boolean isDailyAroundTheClock(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
