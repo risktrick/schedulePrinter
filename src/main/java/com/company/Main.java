@@ -1,9 +1,12 @@
 package com.company;
 
+import com.company.model.DayModel;
 import com.company.model.SchedulerDeserializer;
 import com.company.model.SchedulerModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.util.Map;
 
 public class Main {
 
@@ -18,6 +21,7 @@ public class Main {
 
         System.out.println(schedulerModel);
 
+        Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler = schedulerModel.getDays();
 
 
     }

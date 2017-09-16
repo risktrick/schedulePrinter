@@ -43,20 +43,20 @@ public class SchedulerDeserializer implements JsonDeserializer<SchedulerModel> {
         for (Map.Entry<String, JsonElement> entriesDay : entriesDays) {
             String key = entriesDay.getKey();
             JsonArray jsonArray = entriesDay.getValue().getAsJsonArray();
-            if (key.contentEquals(SchedulerModel.MON_STR)) {
-                schedulerModel.put(SchedulerModel.MON_STR, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.TUE_STR)) {
-                schedulerModel.put(SchedulerModel.TUE_STR, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.WED_STR)) {
-                schedulerModel.put(SchedulerModel.WED_STR, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.THU_STR)) {
-                schedulerModel.put(SchedulerModel.THU_STR, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.FRI_STR)) {
-                schedulerModel.put(SchedulerModel.FRI_STR, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.SAT_STR)) {
-                schedulerModel.put(SchedulerModel.SAT_STR, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.SUN_STR)) {
-                schedulerModel.put(SchedulerModel.SUN_STR, jsonArrayToDayModel(gson, jsonArray));
+            if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.MON.code)) {
+                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.MON, jsonArrayToDayModel(gson, jsonArray));
+            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.TUE.code)) {
+                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.TUE, jsonArrayToDayModel(gson, jsonArray));
+            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.WED.code)) {
+                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.WED, jsonArrayToDayModel(gson, jsonArray));
+            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.THU.code)) {
+                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.THU, jsonArrayToDayModel(gson, jsonArray));
+            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.FRI.code)) {
+                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.FRI, jsonArrayToDayModel(gson, jsonArray));
+            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.SAT.code)) {
+                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.SAT, jsonArrayToDayModel(gson, jsonArray));
+            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.SUN.code)) {
+                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.SUN, jsonArrayToDayModel(gson, jsonArray));
             }
         }
         return schedulerModel;

@@ -1,38 +1,57 @@
 package com.company.model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 public class SchedulerModel {
-    public static final String MON_STR = "mon";
-    public static final String TUE_STR = "tue";
-    public static final String WED_STR = "wed";
-    public static final String THU_STR = "thu";
-    public static final String FRI_STR = "fri";
-    public static final String SAT_STR = "sat";
-    public static final String SUN_STR = "sun";
 
-    private final HashMap<String, DayModel> hashMap = new HashMap<>(7);
+    public enum DAYS_OF_WEEK
+    {   MON("mon"),
+        TUE("tue"),
+        WED("wed"),
+        THU("thu"),
+        FRI("fri"),
+        SAT("sat"),
+        SUN("sun");
+
+        String code;
+        DAYS_OF_WEEK(String code) {
+            this.code = code;
+        }
+    };
+
+    private final TreeMap<DAYS_OF_WEEK, DayModel> daysMap = new TreeMap<>();
 
     public SchedulerModel() {
-        hashMap.put(MON_STR, null);
+        daysMap.put(DAYS_OF_WEEK.MON, null);
+        daysMap.put(DAYS_OF_WEEK.TUE, null);
+        daysMap.put(DAYS_OF_WEEK.WED, null);
+        daysMap.put(DAYS_OF_WEEK.THU, null);
+        daysMap.put(DAYS_OF_WEEK.FRI, null);
+        daysMap.put(DAYS_OF_WEEK.SAT, null);
+        daysMap.put(DAYS_OF_WEEK.SUN, null);
+
+        String a = DAYS_OF_WEEK.MON.code;
     }
 
-    public void put(String day, DayModel dayModel) {
-        hashMap.put(day, dayModel);
+    public void put(DAYS_OF_WEEK day, DayModel dayModel) {
+        daysMap.put(day, dayModel);
+    }
+
+    public Map<DAYS_OF_WEEK, DayModel> getDays() {
+        return daysMap;
     }
 
     @Override
     public String toString() {
         String result = "SchedulerModel{" + "\r\n";
 
-        Set<Map.Entry<String, DayModel>> entries = hashMap.entrySet();
-        for (Map.Entry<String, DayModel> entry : entries) {
+        Set<Map.Entry<DAYS_OF_WEEK, DayModel>> entries = daysMap.entrySet();
+        for (Map.Entry<DAYS_OF_WEEK, DayModel> entry : entries) {
             result = result.concat(entry.getKey() + "=" + entry.getValue() + ", \r\n");
         }
         result = result.concat("}");
-
         return result;
     }
 }
