@@ -1,12 +1,12 @@
-package com.company;
+package com.company.model;
 
-import com.company.model.DayModel;
-import com.company.model.FromTo;
-import com.company.model.SchedulerModel;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SchedulerDeserializer implements JsonDeserializer<SchedulerModel> {
 

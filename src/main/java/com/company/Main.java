@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.model.SchedulerDeserializer;
 import com.company.model.SchedulerModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
