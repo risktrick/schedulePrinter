@@ -44,19 +44,19 @@ public class SchedulerDeserializer implements JsonDeserializer<SchedulerModel> {
             String key = entriesDay.getKey();
             JsonArray jsonArray = entriesDay.getValue().getAsJsonArray();
             if (key.contentEquals(SchedulerModel.MON_STR)) {
-                schedulerModel.mon = jsonArrayToDayModel(gson, jsonArray);
+                schedulerModel.put(SchedulerModel.MON_STR, jsonArrayToDayModel(gson, jsonArray));
             } else if (key.contentEquals(SchedulerModel.TUE_STR)) {
-                schedulerModel.tue = jsonArrayToDayModel(gson, jsonArray);
+                schedulerModel.put(SchedulerModel.TUE_STR, jsonArrayToDayModel(gson, jsonArray));
             } else if (key.contentEquals(SchedulerModel.WED_STR)) {
-                schedulerModel.wed = jsonArrayToDayModel(gson, jsonArray);
+                schedulerModel.put(SchedulerModel.WED_STR, jsonArrayToDayModel(gson, jsonArray));
             } else if (key.contentEquals(SchedulerModel.THU_STR)) {
-                schedulerModel.thu = jsonArrayToDayModel(gson, jsonArray);
+                schedulerModel.put(SchedulerModel.THU_STR, jsonArrayToDayModel(gson, jsonArray));
             } else if (key.contentEquals(SchedulerModel.FRI_STR)) {
-                schedulerModel.fri = jsonArrayToDayModel(gson, jsonArray);
+                schedulerModel.put(SchedulerModel.FRI_STR, jsonArrayToDayModel(gson, jsonArray));
             } else if (key.contentEquals(SchedulerModel.SAT_STR)) {
-                schedulerModel.sat = jsonArrayToDayModel(gson, jsonArray);
+                schedulerModel.put(SchedulerModel.SAT_STR, jsonArrayToDayModel(gson, jsonArray));
             } else if (key.contentEquals(SchedulerModel.SUN_STR)) {
-                schedulerModel.sun = jsonArrayToDayModel(gson, jsonArray);
+                schedulerModel.put(SchedulerModel.SUN_STR, jsonArrayToDayModel(gson, jsonArray));
             }
         }
         return schedulerModel;

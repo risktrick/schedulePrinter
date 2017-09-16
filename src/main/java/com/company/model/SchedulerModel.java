@@ -1,7 +1,8 @@
 package com.company.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class SchedulerModel {
     public static final String MON_STR = "mon";
@@ -12,23 +13,26 @@ public class SchedulerModel {
     public static final String SAT_STR = "sat";
     public static final String SUN_STR = "sun";
 
-    public DayModel mon;
-    public DayModel tue;
-    public DayModel wed;
-    public DayModel thu;
-    public DayModel fri;
-    public DayModel sat;
-    public DayModel sun;
+    private final HashMap<String, DayModel> hashMap = new HashMap<>(7);
+
+    public SchedulerModel() {
+        hashMap.put(MON_STR, null);
+    }
+
+    public void put(String day, DayModel dayModel) {
+        hashMap.put(day, dayModel);
+    }
 
     @Override
     public String toString() {
-        return "SchedulerModel{" + "\r\n" +
-                "mon=" + mon + ",\r\n" +
-                "tue=" + tue + ",\r\n" +
-                "wed=" + wed + ",\r\n" +
-                "thu=" + thu + ",\r\n" +
-                "fri=" + fri + ",\r\n" +
-                "sat=" + sat + ",\r\n" +
-                "sun=" + sun + ",\r\n" +'}';
+        String result = "SchedulerModel{" + "\r\n";
+
+        Set<Map.Entry<String, DayModel>> entries = hashMap.entrySet();
+        for (Map.Entry<String, DayModel> entry : entries) {
+            result = result.concat(entry.getKey() + "=" + entry.getValue() + ", \r\n");
+        }
+        result = result.concat("}");
+
+        return result;
     }
 }

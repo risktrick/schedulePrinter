@@ -16,5 +16,8 @@ public class Main {
         SchedulerModel schedulerModel = gson.fromJson(JsonStrings.JSON4, SchedulerModel.class);
 
         System.out.println(schedulerModel);
+
+
+
     }
 }
