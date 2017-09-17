@@ -26,17 +26,26 @@ public class Main {
         System.out.println(schedulerModel);
         Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler = schedulerModel.getDays();
 
+        String result = null;
 
         if (isDailyAroundTheClock(scheduler.values())) {
-            return Constants.ежедневно;
-        } else {
-            String time = isOneTimeForAllDays(scheduler);
-            if (time != null) {
-                return Constants.ежедневно + " " + time;
-            }
+            result = Constants.ежедневно;
         }
 
-        return null;
+        String time = isOneTimeForAllDays(scheduler);
+        if (time != null) {
+            result = Constants.ежедневно + " " + time;
+        }
+
+
+        // здесь значит модель не пустая,
+        // в модели либо все дни и разное время,
+        // либо не все дни (и возможно так же разное время)
+        if (result == null) {
+            result = walkByDays(scheduler);
+        }
+
+        return result;
     }
 
     private static SchedulerModel parseJson(String jsonStr) {
@@ -97,7 +106,6 @@ public class Main {
         return result;
     }
 
-
     /**
      * @return true if
      * 1) empty model (no one day)
@@ -120,6 +128,7 @@ public class Main {
 
         return result;
     }
+
 
     private static int getCountNullDays(Collection<DayModel> days) {
         int countNotNullDays = 0;
@@ -148,5 +157,10 @@ public class Main {
             }
         }
         return allDayHasEmptyBody;
+    }
+
+    private static String walkByDays(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+
+        return null;
     }
 }

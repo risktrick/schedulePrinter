@@ -31,6 +31,16 @@ public class MainTest {
 
 
     @Test
+    public void oneTimeForAllDays() throws Exception {
+        String expected = Constants.ежедневно + " " + "09:00-23:00";
+        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON1));
+    }
+
+
+
+
+
+    @Test
     public void notAllDaysIsButAllTimeIsEmpty_truePrint() throws Exception {
         String expected = "пн-сб";
         Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON5));
@@ -44,11 +54,5 @@ public class MainTest {
 
 
 
-
-    @Test
-    public void oneTimeForAllDays() throws Exception {
-        String expected = Constants.ежедневно + " " + "09:00-23:00";
-        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON1));
-    }
 
 }
