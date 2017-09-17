@@ -25,10 +25,23 @@ public class MainTest {
 
     //ошибка если не все дни! если дня нет то два интервала должно быть!!!
     @Test
-    public void notAllDaysIsButAllTimeIsEmpty() throws Exception {
+    public void notAllDaysIsButAllTimeIsEmpty_notPrintDaily() throws Exception {
         String notExpected = Constants.ежедневно;
         Assert.assertNotEquals(notExpected, Main.getScheduleString(JsonStrings.JSON5));
     }
+
+    @Test
+    public void notAllDaysIsButAllTimeIsEmpty_truePrint() throws Exception {
+        String expected = "пн-сб";
+        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON5));
+    }
+
+    @Test
+    public void notAllDaysIsButAllTimeIsEmpty_truePrint2() throws Exception {
+        String expected = "пн-чт, сб-вс";
+        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON6));
+    }
+
 
 
     @Test

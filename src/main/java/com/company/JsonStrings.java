@@ -222,4 +222,45 @@ public class JsonStrings {
             "    ]\n" +
             "  }\n" +
             "}";
+
+    public static final String JSON6 = "{\n" +
+            "  \"schedule\": {\n" +
+            "    \"mon\": [\n" +
+            "      {\n" +
+            "        \"from\": null,\n" +
+            "        \"to\": null\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"tue\": [\n" +
+            "      {\n" +
+            "        \"from\": null,\n" +
+            "        \"to\": null\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"wed\": [\n" +
+            "      {\n" +
+            "        \"from\": null,\n" +
+            "        \"to\": null\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"thu\": [\n" +
+            "      {\n" +
+            "        \"from\": null,\n" +
+            "        \"to\": null\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"sat\": [\n" +
+            "      {\n" +
+            "        \"from\": null,\n" +
+            "        \"to\": null\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"sun\": [\n" +
+            "      {\n" +
+            "        \"from\": null,\n" +
+            "        \"to\": null\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  }\n" +
+            "}";
 }
