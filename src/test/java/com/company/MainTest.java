@@ -14,11 +14,22 @@ public class MainTest {
         Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON2));
     }
 
+
+    //ошибка если не все дни! если дня нет то два интервала должно быть!!!
     @Test
     public void allDaysIsButAllTimeIsEmpty() throws Exception {
         String expected = Constants.ежедневно;
         Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON4));
     }
+
+
+    //ошибка если не все дни! если дня нет то два интервала должно быть!!!
+    @Test
+    public void notAllDaysIsButAllTimeIsEmpty() throws Exception {
+        String notExpected = Constants.ежедневно;
+        Assert.assertNotEquals(notExpected, Main.getScheduleString(JsonStrings.JSON5));
+    }
+
 
     @Test
     public void oneTimeForAllDays() throws Exception {
