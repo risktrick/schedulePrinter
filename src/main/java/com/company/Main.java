@@ -83,7 +83,7 @@ public class Main {
             }
         }
 
-        System.out.println("status=" + status + " tmpFromToList=" + tmpFromToList);
+//        System.out.println("status=" + status + " tmpFromToList=" + tmpFromToList);
         if (tmpFromToList != null && status == 1) {
             return toReadableString(tmpFromToList);
         }
@@ -160,7 +160,51 @@ public class Main {
     }
 
     private static String walkByDays(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+        System.out.println("\n\nwalkByDays");
 
-        return null;
+        LinkedList<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> linkedList = new LinkedList<>(scheduler.entrySet());
+        ListIterator<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> listIterator = linkedList.listIterator();
+
+        String result = "";
+        boolean flagInRange = true;
+        boolean flagBreakRange = false;
+        Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> current;
+
+        while (listIterator.hasNext()) {
+            current = listIterator.next();
+            DayModel currentDayModel = current.getValue();
+            String currentDayName = current.getKey().name;
+
+            if (currentDayModel != null && currentDayModel.getFromToList() != null) {
+                if (flagInRange) {
+                    flagInRange = false;
+                    result = result + currentDayName;
+                } else {
+                    if (listIterator.hasNext()) {
+                        Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> nextItem = listIterator.next();
+                        DayModel nextDayModel = nextItem.getValue();
+
+                        if (nextDayModel == null) {
+                            result = result + "-" + currentDayName;
+                        }
+                    }
+                }
+            }
+        }
+
+//        for (Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> entry : entries) {
+//            if (dayModel != null && dayModel.getFromToList() != null) {
+//                if (flagInRange) {
+//                    flagInRange = false;
+//                    result = result + key.name;
+//                }
+//
+//                if (next == null) {
+//                    result = result + "-" + current;
+//                }
+//            }
+//        }
+
+        return result;
     }
 }

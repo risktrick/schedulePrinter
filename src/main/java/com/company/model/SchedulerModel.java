@@ -7,17 +7,19 @@ import java.util.TreeMap;
 public class SchedulerModel {
 
     public enum DAYS_OF_WEEK
-    {   MON("mon"),
-        TUE("tue"),
-        WED("wed"),
-        THU("thu"),
-        FRI("fri"),
-        SAT("sat"),
-        SUN("sun");
+    {   MON("mon", "пн"),
+        TUE("tue", "вт"),
+        WED("wed", "ср"),
+        THU("thu", "чт"),
+        FRI("fri", "пт"),
+        SAT("sat", "сб"),
+        SUN("sun", "вс");
 
-        String code;
-        DAYS_OF_WEEK(String code) {
-            this.code = code;
+        public String jsonCode;
+        public String name;
+        DAYS_OF_WEEK(String jsonCode, String name) {
+            this.jsonCode = jsonCode;
+            this.name = name;
         }
     };
 
@@ -31,8 +33,6 @@ public class SchedulerModel {
         daysMap.put(DAYS_OF_WEEK.FRI, null);
         daysMap.put(DAYS_OF_WEEK.SAT, null);
         daysMap.put(DAYS_OF_WEEK.SUN, null);
-
-        String a = DAYS_OF_WEEK.MON.code;
     }
 
     public void put(DAYS_OF_WEEK day, DayModel dayModel) {
