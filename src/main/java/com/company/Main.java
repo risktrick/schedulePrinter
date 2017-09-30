@@ -160,7 +160,8 @@ public class Main {
     }
 
     private static String walkByDays(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
-        System.out.println("\n\nwalkByDays");
+        System.out.println("\n\n");
+        System.out.println("walkByDays");
 
         LinkedList<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> linkedList = new LinkedList<>(scheduler.entrySet());
         ListIterator<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> listIterator = linkedList.listIterator();
@@ -170,6 +171,11 @@ public class Main {
         boolean flagBreakRange = false;
         Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> current;
 
+
+        //надо сохранять в список пока следующий день не равен null
+        //если следующий после Null (или череды null) не null -> для них новый список
+        //потом выводить из этого списка первый - последний
+        //для времени соответственно прежде чем выводить аналогично пробежаться
         while (listIterator.hasNext()) {
             current = listIterator.next();
             DayModel currentDayModel = current.getValue();
