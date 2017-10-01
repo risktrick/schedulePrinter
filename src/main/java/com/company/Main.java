@@ -225,8 +225,13 @@ public class Main {
         System.out.println("byBuckets");
         byBuckets.forEach(System.out::println);
 
+        System.out.println("building str...");
+        String result = "";
+        for (List<WeekDay> bucket : byBuckets) {
+            result +=  buildStr(bucket);    //In one bucket all days has equal listFromTo.
+        }
 
-        return null;
+        return result;
     }
 
     private static LinkedList<WeekDay> convert(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
@@ -271,5 +276,39 @@ public class Main {
             }
         }
         return byBuckets;
+    }
+
+    //In one bucket all days has equal listFromTo.
+    //Here we just need add separator and build correct string. For time just use ListFromTo of any element
+    private static String buildStr(List<WeekDay> bucket) {
+        StringBuilder str = new StringBuilder();
+
+        boolean flagInRange;
+        String lastDayOfWeek;
+
+        for (WeekDay weekDay : bucket) {
+
+
+
+            if (str.length() > 0) {
+                str.append(", ");
+            }
+            str.append(weekDay.getDayOfWeek().name);
+        }
+
+        String time = getPrintableTime(bucket.get(0).getFromToList());
+        str.append(time);
+        return str.toString();
+    }
+
+    private static String getPrintableTime(List<FromTo> fromToList) {
+        boolean hasNotNull = false;
+        for (FromTo fromTo : fromToList) {
+            if (!fromTo.isEmpty()) {
+                hasNotNull = true;
+            }
+        }
+
+        return hasNotNull ? fromToList.toString() : "";
     }
 }
