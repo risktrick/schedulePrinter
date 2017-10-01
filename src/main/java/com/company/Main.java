@@ -285,39 +285,63 @@ public class Main {
         StringBuilder str = new StringBuilder();
 
         boolean flagInRange = false;
-        SchedulerModel.DAYS_OF_WEEK lastDay = null;
+        WeekDay currentDay;
+        WeekDay nextDay;
 
         for (int i = 0; i < bucket.size(); i++) {
-            WeekDay weekDay = bucket.get(i);
+            currentDay = bucket.get(i);
 
-            if (!flagInRange) {
-                flagInRange = true;
-                lastDay = weekDay.getDayOfWeek();
+            if (flagInRange == false) {
+                str.append(currentDay.getDayOfWeek().name);
+
+//                //if no more items print "-lv"
+//                if (i == bucket.size() - 1) {
+//                    str.append("-");
+//                    str.append(weekDay.getDayOfWeek().name);
+//                } else {
+//                    str.append(weekDay.getDayOfWeek().name);
+//                }
+
+;
 
 
-                //if no more items print "-lv"
-                if (i == bucket.size() - 1) {
-                    str.append("-");
-                    str.append(weekDay.getDayOfWeek().name);
-                } else {
-                    str.append(weekDay.getDayOfWeek().name);
-                }
-
-
-            } else {    //in range
-                if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() == 1) {
-                    lastDay = weekDay.getDayOfWeek();
-                } else if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() > 1){
-                    str.append("-");
-                    str.append(lastDay.name);
-                    str.append(", ");
-                    str.append(weekDay.getDayOfWeek().name);
-                    flagInRange = false;
-
-                } else {
-                    str.append(",");
-                }
             }
+
+            //next element does not exist -> break
+            if (i + 1 > bucket.size() -1) {
+                break;
+            }
+
+            nextDay = bucket.get(i + 1);
+
+            //looking for the next element:difference is one -> set flagInRange
+            if () {
+                flagInRange = true;
+            }
+
+            //difference more then one ->
+            // if in range print current
+            // else print ","
+
+
+
+
+
+
+//            else {    //in range
+//                if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() == 1) {
+//                    lastDay = weekDay.getDayOfWeek();
+//                } else if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() > 1){
+//                    str.append("-");
+//                    str.append(lastDay.name);
+//                    str.append(", ");
+//                    str.append(weekDay.getDayOfWeek().name);
+//                    flagInRange = false;
+//
+//                } else {
+//                    str.append(",");
+//                }
+//            }
         }
 
         String time = getPrintableTime(bucket.get(0).getFromToList());
