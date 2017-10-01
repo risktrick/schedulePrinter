@@ -7,19 +7,21 @@ import java.util.TreeMap;
 public class SchedulerModel {
 
     public enum DAYS_OF_WEEK
-    {   MON("mon", "пн"),
-        TUE("tue", "вт"),
-        WED("wed", "ср"),
-        THU("thu", "чт"),
-        FRI("fri", "пт"),
-        SAT("sat", "сб"),
-        SUN("sun", "вс");
+    {   MON("mon", "пн", 1),
+        TUE("tue", "вт", 2),
+        WED("wed", "ср", 3),
+        THU("thu", "чт", 4),
+        FRI("fri", "пт", 5),
+        SAT("sat", "сб", 6),
+        SUN("sun", "вс", 7);
 
         public String jsonCode;
         public String name;
-        DAYS_OF_WEEK(String jsonCode, String name) {
+        public int number;
+        DAYS_OF_WEEK(String jsonCode, String name, int number) {
             this.jsonCode = jsonCode;
             this.name = name;
+            this.number = number;
         }
     }
 

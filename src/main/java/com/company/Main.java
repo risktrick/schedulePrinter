@@ -231,6 +231,7 @@ public class Main {
             result +=  buildStr(bucket);    //In one bucket all days has equal listFromTo.
         }
 
+        System.out.println("result = " + result);
         return result;
     }
 
@@ -283,17 +284,40 @@ public class Main {
     private static String buildStr(List<WeekDay> bucket) {
         StringBuilder str = new StringBuilder();
 
-        boolean flagInRange;
-        String lastDayOfWeek;
+        boolean flagInRange = false;
+        SchedulerModel.DAYS_OF_WEEK lastDay = null;
 
-        for (WeekDay weekDay : bucket) {
+        for (int i = 0; i < bucket.size(); i++) {
+            WeekDay weekDay = bucket.get(i);
+
+            if (!flagInRange) {
+                flagInRange = true;
+                lastDay = weekDay.getDayOfWeek();
 
 
+                //if no more items print "-lv"
+                if (i == bucket.size() - 1) {
+                    str.append("-");
+                    str.append(weekDay.getDayOfWeek().name);
+                } else {
+                    str.append(weekDay.getDayOfWeek().name);
+                }
 
-            if (str.length() > 0) {
-                str.append(", ");
+
+            } else {    //in range
+                if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() == 1) {
+                    lastDay = weekDay.getDayOfWeek();
+                } else if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() > 1){
+                    str.append("-");
+                    str.append(lastDay.name);
+                    str.append(", ");
+                    str.append(weekDay.getDayOfWeek().name);
+                    flagInRange = false;
+
+                } else {
+                    str.append(",");
+                }
             }
-            str.append(weekDay.getDayOfWeek().name);
         }
 
         String time = getPrintableTime(bucket.get(0).getFromToList());
