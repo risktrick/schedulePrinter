@@ -54,7 +54,7 @@ public class MainTest {
 
     @Test
     public void notAllDaysAndSpecificTime() throws Exception {
-        String expected = "пн 09:00-23:00, 19:00-23:00; вт-ср, пт-сб 09:00-23:00; вс 05:00-23:00";
+        String expected = "пн 09:00-23:00, 19:00-23:00, вт-ср, пт-сб 09:00-23:00, вс 05:00-23:00";
         Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON3));
     }
 

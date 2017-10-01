@@ -227,8 +227,13 @@ public class Main {
 
         System.out.println("building str...");
         String result = "";
-        for (List<WeekDay> bucket : byBuckets) {
+
+        for (int i = 0; i < byBuckets.size(); i++) {
+            List<WeekDay> bucket = byBuckets.get(i);
             result +=  buildStr(bucket);    //In one bucket all days has equal listFromTo.
+            if (i != byBuckets.size() - 1) {
+                result += ", ";
+            }
         }
 
         System.out.println("result = " + result);
@@ -282,7 +287,7 @@ public class Main {
     //In one bucket all days has equal listFromTo.
     //Here we just need add separator and build correct string. For time just use ListFromTo of any element
     private static String buildStr(List<WeekDay> bucket) {
-        StringBuilder str = new StringBuilder();
+        StringBuilder resultStr = new StringBuilder();
 
         boolean flagInRange = false;
         WeekDay currentDay;
@@ -292,61 +297,46 @@ public class Main {
             currentDay = bucket.get(i);
 
             if (flagInRange == false) {
-                str.append(currentDay.getDayOfWeek().name);
-
-//                //if no more items print "-lv"
-//                if (i == bucket.size() - 1) {
-//                    str.append("-");
-//                    str.append(weekDay.getDayOfWeek().name);
-//                } else {
-//                    str.append(weekDay.getDayOfWeek().name);
-//                }
-
-;
-
-
+                resultStr.append(currentDay.getDayOfWeek().name);
             }
 
             //next element does not exist -> break
-            if (i + 1 > bucket.size() -1) {
+            if (i + 1 > bucket.size() - 1) {
+                if (flagInRange) {
+                    resultStr.append("-");
+                    resultStr.append(currentDay.getDayOfWeek().name);
+                }
                 break;
             }
 
             nextDay = bucket.get(i + 1);
 
             //looking for the next element:difference is one -> set flagInRange
-            if () {
+            if (nextDay.getDayOfWeek().ordinal() - currentDay.getDayOfWeek().ordinal() == 1) {
                 flagInRange = true;
             }
 
-            //difference more then one ->
+            // difference more then one ->
             // if in range print current
             // else print ","
+            // (else if last element nothing to print) - not need code
+            else if (nextDay.getDayOfWeek().ordinal() - currentDay.getDayOfWeek().ordinal() > 1) {
+                if (flagInRange) {
+                    resultStr.append("-");
+                    resultStr.append(currentDay.getDayOfWeek().name);
+                    resultStr.append(", "); //because has next element
+                    flagInRange = false;
+                } else {
+                    resultStr.append(", ");
+                }
+            }
 
-
-
-
-
-
-//            else {    //in range
-//                if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() == 1) {
-//                    lastDay = weekDay.getDayOfWeek();
-//                } else if (weekDay.getDayOfWeek().ordinal() - lastDay.ordinal() > 1){
-//                    str.append("-");
-//                    str.append(lastDay.name);
-//                    str.append(", ");
-//                    str.append(weekDay.getDayOfWeek().name);
-//                    flagInRange = false;
-//
-//                } else {
-//                    str.append(",");
-//                }
-//            }
+            // if last element and in range -> print last
         }
 
         String time = getPrintableTime(bucket.get(0).getFromToList());
-        str.append(time);
-        return str.toString();
+        resultStr.append(time);
+        return resultStr.toString();
     }
 
     private static String getPrintableTime(List<FromTo> fromToList) {
@@ -357,6 +347,23 @@ public class Main {
             }
         }
 
-        return hasNotNull ? fromToList.toString() : "";
+        return hasNotNull ? nicePrint(fromToList) : "";
+    }
+
+    private static String nicePrint(List<FromTo> fromToList) {
+        StringBuilder result = new StringBuilder(" ");
+        for (int i = 0; i < fromToList.size(); i++) {
+            FromTo fromTo = fromToList.get(i);
+            From from = fromTo.getFrom();
+            To to = fromTo.getTo();
+
+            result.append(from.getHour() + ":" + from.getMinute());
+            result.append("-");
+            result.append(to.getHour() + ":" + to.getMinute());
+            if (i != fromToList.size() - 1) {
+                result.append(", ");
+            }
+        }
+        return result.toString();
     }
 }
