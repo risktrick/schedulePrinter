@@ -1,9 +1,6 @@
 package com.company;
 
-import com.company.model.DayModel;
-import com.company.model.FromTo;
-import com.company.model.SchedulerDeserializer;
-import com.company.model.SchedulerModel;
+import com.company.model.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -218,21 +215,59 @@ public class Main {
     private static String constructDaysStr(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
         System.out.println("\n");
         System.out.println("constructDaysStr");
-        LinkedList<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> listAllDays = new LinkedList<>(scheduler.entrySet());
 
-        Iterator<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> iterator = listAllDays.iterator();
+        List<WeekDay> list = convert(scheduler);
+        System.out.println("list weekDays");
+        list.forEach(System.out::println);
 
-        DayModel tmpDayModel;
-        while (iterator.hasNext()) {
-            Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> dayEntry = iterator.next();
+        List<List<WeekDay>> byBuckets = new ArrayList<>();
 
+        List<FromTo> tmpFromToList;
+        for (int i = 0; i < list.size(); i++) {
+            WeekDay weekDay = list.get(i);
+
+            if (weekDay != null && weekDay.getFromToList() != null) {
+                tmpFromToList = new LinkedList<>(weekDay.getFromToList());  //save element fromToList for searching copies
+
+                List<WeekDay> bucket = new LinkedList<>();
+
+                bucket.add(weekDay);    //insert to bucket element
+                list.set(i, null);//instead of list.remove(i);         //rm element from src list
+
+                //search weekDays with equals fromToList. If found rm from src list and put to bucket.
+                for (int j = 0; j < list.size(); j++) {
+                    WeekDay day = list.get(j);
+                    if (day != null && day.getFromToList() != null && day.getFromToList().equals(tmpFromToList)) {
+                        bucket.add(day);
+                        list.set(j, null);  //instead of list.remove(j) cause we cant change size of list in loop by list
+                    }
+                }
+
+                byBuckets.add(bucket);
+            }
         }
 
-        List<>
+        System.out.println();
+        System.out.println("byBuckets");
+        byBuckets.forEach(System.out::println);
 
-
-//        Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> day
 
         return null;
+    }
+
+
+    private static LinkedList<WeekDay> convert(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+        LinkedList<WeekDay> list = new LinkedList<>();
+        for (Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> entry : scheduler.entrySet()) {
+            SchedulerModel.DAYS_OF_WEEK dayOfWeek = entry.getKey();
+            List<FromTo> fromToList = null;
+            if (entry.getValue() != null) {
+                fromToList = entry.getValue().getFromToList();
+            }
+
+            WeekDay weekDay = new WeekDay(dayOfWeek, fromToList);
+            list.add(weekDay);
+        }
+        return list;
     }
 }

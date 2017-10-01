@@ -21,7 +21,7 @@ public class SchedulerModel {
             this.jsonCode = jsonCode;
             this.name = name;
         }
-    };
+    }
 
     private final TreeMap<DAYS_OF_WEEK, DayModel> daysMap = new TreeMap<>();
 

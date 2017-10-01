@@ -52,6 +52,11 @@ public class MainTest {
         Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON6));
     }
 
+    @Test
+    public void notAllDaysAndSpecificTime() throws Exception {
+        String expected = "???";
+        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON3));
+    }
 
 
 

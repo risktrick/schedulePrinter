@@ -30,10 +30,7 @@ public class From {
 
     @Override
     public String toString() {
-        return "From{" +
-                "hour='" + hour + '\'' +
-                ", minute='" + minute + '\'' +
-                '}';
+        return "From{" + hour + ':' + minute + '}';
     }
 
     @Override

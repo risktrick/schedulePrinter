@@ -14,10 +14,7 @@ public class FromTo {
 
     @Override
     public String toString() {
-        return "FromTo{" +
-                "from=" + from +
-                ", to=" + to +
-                '}';
+        return "FromTo{" + from + " - " + to + '}';
     }
 
     public boolean isEmpty() {
