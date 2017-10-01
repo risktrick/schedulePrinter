@@ -220,8 +220,32 @@ public class Main {
         System.out.println("list weekDays");
         list.forEach(System.out::println);
 
-        List<List<WeekDay>> byBuckets = new ArrayList<>();
+        List<List<WeekDay>> byBuckets = groupByBuckets(list);
+        System.out.println();
+        System.out.println("byBuckets");
+        byBuckets.forEach(System.out::println);
 
+
+        return null;
+    }
+
+    private static LinkedList<WeekDay> convert(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+        LinkedList<WeekDay> list = new LinkedList<>();
+        for (Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> entry : scheduler.entrySet()) {
+            SchedulerModel.DAYS_OF_WEEK dayOfWeek = entry.getKey();
+            List<FromTo> fromToList = null;
+            if (entry.getValue() != null) {
+                fromToList = entry.getValue().getFromToList();
+            }
+
+            WeekDay weekDay = new WeekDay(dayOfWeek, fromToList);
+            list.add(weekDay);
+        }
+        return list;
+    }
+
+    private static List<List<WeekDay>> groupByBuckets(List<WeekDay> list) {
+        List<List<WeekDay>> byBuckets = new ArrayList<>();
         List<FromTo> tmpFromToList;
         for (int i = 0; i < list.size(); i++) {
             WeekDay weekDay = list.get(i);
@@ -246,28 +270,6 @@ public class Main {
                 byBuckets.add(bucket);
             }
         }
-
-        System.out.println();
-        System.out.println("byBuckets");
-        byBuckets.forEach(System.out::println);
-
-
-        return null;
-    }
-
-
-    private static LinkedList<WeekDay> convert(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
-        LinkedList<WeekDay> list = new LinkedList<>();
-        for (Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> entry : scheduler.entrySet()) {
-            SchedulerModel.DAYS_OF_WEEK dayOfWeek = entry.getKey();
-            List<FromTo> fromToList = null;
-            if (entry.getValue() != null) {
-                fromToList = entry.getValue().getFromToList();
-            }
-
-            WeekDay weekDay = new WeekDay(dayOfWeek, fromToList);
-            list.add(weekDay);
-        }
-        return list;
+        return byBuckets;
     }
 }
