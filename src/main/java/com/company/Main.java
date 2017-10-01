@@ -38,11 +38,12 @@ public class Main {
         }
 
 
-        // здесь значит модель не пустая,
+        // здесь -> модель не пустая,
         // в модели либо все дни и разное время,
         // либо не все дни (и возможно так же разное время)
         if (result == null) {
-            result = walkByDays(scheduler);
+//            result = walkByDays(scheduler);
+            result = constructDaysStr(scheduler);
         }
 
         return result;
@@ -212,5 +213,26 @@ public class Main {
 //        }
 
         return result;
+    }
+
+    private static String constructDaysStr(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+        System.out.println("\n");
+        System.out.println("constructDaysStr");
+        LinkedList<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> listAllDays = new LinkedList<>(scheduler.entrySet());
+
+        Iterator<Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel>> iterator = listAllDays.iterator();
+
+        DayModel tmpDayModel;
+        while (iterator.hasNext()) {
+            Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> dayEntry = iterator.next();
+
+        }
+
+        List<>
+
+
+//        Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> day
+
+        return null;
     }
 }
