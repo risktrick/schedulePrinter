@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class SchedulerModel {
-
     public enum DAYS_OF_WEEK
     {   MON("mon", "пн"),
         TUE("tue", "вт"),
