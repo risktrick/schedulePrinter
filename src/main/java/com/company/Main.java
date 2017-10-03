@@ -14,20 +14,30 @@ public class Main {
         System.out.println("hi");
 
         Locale locale = Locale.getDefault();
-
-        ArrayList<WeekDay> days = getCorrectDaysInTrueOrder(locale);
-        for (WeekDay day : days) {
-            System.out.println("dayOfWeek = " + day);
-        }
-
-        SchedulerModel schedulerModel = new SchedulerModel(days);
-
-
-//        getScheduleString(JsonStrings.JSON1);
+        getScheduleString(locale, JsonStrings.JSON1);
 
     }
 
-    static ArrayList<WeekDay> getCorrectDaysInTrueOrder(Locale locale) {
+    public static String getScheduleString(Locale locale, String jsonStr) {
+        ArrayList<WeekDay> days = getCorrectDaysInTrueOrder(locale);
+        weekDayNamestoLowerCase(locale, days);
+        SchedulerModel schedulerModel = new SchedulerModel(days);
+
+
+        schedulerModel = parseJson(schedulerModel, jsonStr);
+        System.out.println(schedulerModel);
+
+        SchedulerParser parser = new SchedulerParser();
+        return parser.parse(schedulerModel);
+    }
+
+    private static void weekDayNamestoLowerCase(Locale locale, ArrayList<WeekDay> days) {
+        for (WeekDay day : days) {
+            day.setName(day.getName().toLowerCase(locale));
+        }
+    }
+
+    private static ArrayList<WeekDay> getCorrectDaysInTrueOrder(Locale locale) {
         ArrayList<WeekDay> daysOnWeek = new ArrayList<>(7);
 
         DateFormatSymbols dfs = new DateFormatSymbols(locale);
@@ -56,16 +66,6 @@ public class Main {
         }
 
         return daysOnWeek;
-    }
-
-
-    public static String getScheduleString(String jsonStr) {
-
-        SchedulerModel schedulerModel = parseJson(jsonStr);
-        System.out.println(schedulerModel);
-
-        SchedulerParser parser = new SchedulerParser();
-        return parser.parse(schedulerModel);
     }
 
     private static SchedulerModel parseJson(SchedulerModel schedulerModel, String jsonStr) {

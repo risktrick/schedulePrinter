@@ -3,28 +3,29 @@ package com.company;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.Locale;
 
 public class MainTest {
 
+    Locale locale = Locale.getDefault();
 
     @Test
     public void emptyJson() throws Exception {
         String expected = Constants.ежедневно;
-        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON2));
+        Assert.assertEquals(expected, Main.getScheduleString(locale, JsonStrings.JSON2));
     }
 
     @Test
     public void allDaysIsButAllTimeIsEmpty() throws Exception {
         String expected = Constants.ежедневно;
-        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON4));
+        Assert.assertEquals(expected, Main.getScheduleString(locale, JsonStrings.JSON4));
     }
 
     //если дня нет то два интервал должен быть, а не "ежедневно"
     @Test
     public void notAllDaysIsButAllTimeIsEmpty_notPrintDaily() throws Exception {
         String notExpected = Constants.ежедневно;
-        Assert.assertNotEquals(notExpected, Main.getScheduleString(JsonStrings.JSON5));
+        Assert.assertNotEquals(notExpected, Main.getScheduleString(locale, JsonStrings.JSON5));
     }
 
 
@@ -33,7 +34,7 @@ public class MainTest {
     @Test
     public void oneTimeForAllDays() throws Exception {
         String expected = Constants.ежедневно + " " + "09:00-23:00";
-        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON1));
+        Assert.assertEquals(expected, Main.getScheduleString(locale, JsonStrings.JSON1));
     }
 
 
@@ -43,19 +44,19 @@ public class MainTest {
     @Test
     public void notAllDaysIsButAllTimeIsEmpty_truePrint() throws Exception {
         String expected = "пн-сб";
-        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON5));
+        Assert.assertEquals(expected, Main.getScheduleString(locale, JsonStrings.JSON5));
     }
 
     @Test
     public void notAllDaysIsButAllTimeIsEmpty_truePrint2() throws Exception {
         String expected = "пн-чт, сб-вс";
-        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON6));
+        Assert.assertEquals(expected, Main.getScheduleString(locale, JsonStrings.JSON6));
     }
 
     @Test
     public void notAllDaysAndSpecificTime() throws Exception {
         String expected = "пн 09:00-23:00, 19:00-23:00, вт-ср, пт-сб 09:00-23:00, вс 05:00-23:00";
-        Assert.assertEquals(expected, Main.getScheduleString(JsonStrings.JSON3));
+        Assert.assertEquals(expected, Main.getScheduleString(locale, JsonStrings.JSON3));
     }
 
 

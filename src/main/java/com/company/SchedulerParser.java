@@ -15,11 +15,12 @@ public class SchedulerParser {
             result = Constants.ежедневно;
         }
 
-        String time = isOneTimeForAllDays(daysMap);
-        if (time != null) {
-            result = Constants.ежедневно + " " + time;
+        if (result == null) {
+            String time = isOneTimeForAllDays(daysMap.values());
+            if (time != null) {
+                result = Constants.ежедневно + " " + time;
+            }
         }
-
 
         // здесь -> модель не пустая,
         // в модели либо все дни и разное время,
@@ -33,13 +34,66 @@ public class SchedulerParser {
 
 
 
-    private String isOneTimeForAllDays(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
-        Collection<DayModel> days = scheduler.values();
+    /**
+     * @return true if
+     * 1) empty model (no one day)
+     * 2) model contains ALL days and every day has empty FromTo
+     * @param days list of {@link ScheduleDay}
+     */
+    private boolean isDailyAroundTheClock(Collection<ScheduleDay> days) {
+        boolean result = false;
+
+        //size of collection is always 7, (but always element may be null)
+        //dont check just size
+
+        int count = getCountNullDays(days);
+        if (count == 7) {
+            result = true;
+        } else if (count == 0) {
+            if (allDayHasEmptyFromTo(days)) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
 
 
+    private int getCountNullDays(Collection<ScheduleDay> days) {
+        int countNotNullDays = 0;
+        for (ScheduleDay day : days) {
+            if (day != null) {
+                countNotNullDays++;
+            }
+        }
+        return countNotNullDays;
+    }
+
+    private boolean allDayHasEmptyFromTo(Collection<ScheduleDay> days) {
+        if (days.size() != 7) {
+            return false;
+        }
+
+        boolean allDayHasEmptyBody = true;
+        metka: for (ScheduleDay day : days) {
+            if (day != null) {
+                for (FromTo fromTo : day.getFromToList()) {
+                    if (fromTo.isEmpty() == false) {
+                        allDayHasEmptyBody = false;
+                        break metka;
+                    }
+                }
+            }
+        }
+        return allDayHasEmptyBody;
+    }
+
+
+
+    private String isOneTimeForAllDays(Collection<ScheduleDay> days) {
         List<FromTo> tmpFromToList = null;
         int status = 0; //initial state
-        for (DayModel day : days) {
+        for (ScheduleDay day : days) {
             if (day != null) {
                 List<FromTo> fromToList = day.getFromToList();
 
@@ -69,67 +123,13 @@ public class SchedulerParser {
 
 
 
-    /**
-     * @return true if
-     * 1) empty model (no one day)
-     * 2) model contains ALL days and every day has empty FromTo
-     */
-    private boolean isDailyAroundTheClock(Collection<DayModel> days) {
-        boolean result = false;
-
-        //size of collection is always 7, (but always element may be null)
-        //dont check just size
-
-        int count = getCountNullDays(days);
-        if (count == 7) {
-            result = true;
-        } else if (count == 0) {
-            if (allDayHasEmptyFromTo(days)) {
-                result = true;
-            }
-        }
-
-        return result;
-    }
-
-    private int getCountNullDays(Collection<DayModel> days) {
-        int countNotNullDays = 0;
-        for (DayModel day : days) {
-            if (day != null) {
-                countNotNullDays++;
-            }
-        }
-        return countNotNullDays;
-    }
-
-    private boolean allDayHasEmptyFromTo(Collection<DayModel> days) {
-        if (days.size() != 7) {
-            return false;
-        }
-
-        boolean allDayHasEmptyBody = true;
-        metka: for (DayModel day : days) {
-            if (day != null) {
-                for (FromTo fromTo : day.getFromToList()) {
-                    if (fromTo.isEmpty() == false) {
-                        allDayHasEmptyBody = false;
-                        break metka;
-                    }
-                }
-            }
-        }
-        return allDayHasEmptyBody;
-    }
 
 
-
-
-
-    private String constructDaysStr(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+    private String constructDaysStr(Map<WeekDay, ScheduleDay> map) {
         System.out.println("\n");
         System.out.println("constructDaysStr");
 
-        List<ScheduleDay> list = convert(scheduler);
+        List<ScheduleDay> list = convert(map);    //todo change to map.getValues();
         System.out.println("list weekDays");
         list.forEach(System.out::println);
 
@@ -153,10 +153,13 @@ public class SchedulerParser {
         return result;
     }
 
-    private LinkedList<ScheduleDay> convert(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+    //todo remove and change to map.getValues();
+    private LinkedList<ScheduleDay> convert(Map<WeekDay, ScheduleDay> map) {
         LinkedList<ScheduleDay> list = new LinkedList<>();
-        for (Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> entry : scheduler.entrySet()) {
-            SchedulerModel.DAYS_OF_WEEK dayOfWeek = entry.getKey();
+
+        for (Map.Entry<WeekDay, ScheduleDay> entry : map.entrySet()) {
+            WeekDay dayOfWeek = entry.getKey();
+
             List<FromTo> fromToList = null;
             if (entry.getValue() != null) {
                 fromToList = entry.getValue().getFromToList();
@@ -165,6 +168,7 @@ public class SchedulerParser {
             ScheduleDay scheduleDay = new ScheduleDay(dayOfWeek, fromToList);
             list.add(scheduleDay);
         }
+
         return list;
     }
 
@@ -210,14 +214,14 @@ public class SchedulerParser {
             currentDay = bucket.get(i);
 
             if (flagInRange == false) {
-                resultStr.append(currentDay.getWeekDay().name);
+                resultStr.append(currentDay.getWeekDay().getName());
             }
 
             //next element does not exist -> break
             if (i + 1 > bucket.size() - 1) {
                 if (flagInRange) {
                     resultStr.append("-");
-                    resultStr.append(currentDay.getWeekDay().name);
+                    resultStr.append(currentDay.getWeekDay().getName());
                 }
                 break;
             }
@@ -225,7 +229,7 @@ public class SchedulerParser {
             nextDay = bucket.get(i + 1);
 
             //looking for the next element:difference is one -> set flagInRange
-            if (nextDay.getWeekDay().ordinal() - currentDay.getWeekDay().ordinal() == 1) {
+            if (nextDay.getWeekDay().getValue() - currentDay.getWeekDay().getValue() == 1) {
                 flagInRange = true;
             }
 
@@ -233,10 +237,10 @@ public class SchedulerParser {
             // if in range print current
             // else print ","
             // (else if last element nothing to print) - not need code
-            else if (nextDay.getWeekDay().ordinal() - currentDay.getWeekDay().ordinal() > 1) {
+            else if (nextDay.getWeekDay().getValue() - currentDay.getWeekDay().getValue() > 1) {
                 if (flagInRange) {
                     resultStr.append("-");
-                    resultStr.append(currentDay.getWeekDay().name);
+                    resultStr.append(currentDay.getWeekDay().getName());
                     resultStr.append(", "); //because has next element
                     flagInRange = false;
                 } else {
