@@ -60,5 +60,17 @@ public class MainTest {
     }
 
 
+    //US Locale
 
+    @Test
+    public void notAllDaysIsButAllTimeIsEmpty_truePrint_anotherLocale() throws Exception {
+        String expected = "sun-thu, sat";
+        Assert.assertEquals(expected, Main.getScheduleString(Locale.US, JsonStrings.JSON6));
+    }
+
+    @Test
+    public void notAllDaysAndSpecificTime_anotherLocale() throws Exception {
+        String expected = "sun 05:00-23:00, mon 09:00-23:00, 19:00-23:00, tue-wed, fri-sat 09:00-23:00";
+        Assert.assertEquals(expected, Main.getScheduleString(Locale.US, JsonStrings.JSON3));
+    }
 }
