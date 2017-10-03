@@ -66,10 +66,10 @@ public class WeekDay implements Comparable<WeekDay> {
     public int compareTo(WeekDay o) {
         if (o.getValue() == this.getValue()) {
             return 0;
-        } else if (o.getValue() > this.getValue()) {
-            return 1;
-        } else {
+        } else if (this.getValue() < o.getValue()) {
             return -1;
+        } else {
+            return 1;
         }
     }
 }
