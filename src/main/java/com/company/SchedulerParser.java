@@ -116,7 +116,7 @@ public class SchedulerParser {
 
 //        System.out.println("status=" + status + " tmpFromToList=" + tmpFromToList);
         if (tmpFromToList != null && status == 1) {
-            return toReadableString(tmpFromToList);
+            return nicePrint(tmpFromToList);
         }
         return null;
     }
@@ -252,7 +252,10 @@ public class SchedulerParser {
         }
 
         String time = getPrintableTime(bucket.get(0).getFromToList());
-        resultStr.append(time);
+        if (time != null) {
+            resultStr.append(' ');
+            resultStr.append(time);
+        }
         return resultStr.toString();
     }
 
@@ -267,39 +270,30 @@ public class SchedulerParser {
             }
         }
 
-        return hasNotNull ? nicePrint(fromToList) : "";
+        return hasNotNull ? nicePrint(fromToList) : null;
     }
 
     private String nicePrint(List<FromTo> fromToList) {
-        StringBuilder result = new StringBuilder(" ");
+        StringBuilder result = null;
+
         for (int i = 0; i < fromToList.size(); i++) {
             FromTo fromTo = fromToList.get(i);
-            From from = fromTo.getFrom();
-            To to = fromTo.getTo();
-
-            result.append(from.getHour() + ":" + from.getMinute());
-            result.append("-");
-            result.append(to.getHour() + ":" + to.getMinute());
-            if (i != fromToList.size() - 1) {
-                result.append(", ");
-            }
-        }
-        return result.toString();
-    }
-
-    private String toReadableString(List<FromTo> tmpFromToList) {
-        String result = null;
-        for (FromTo fromTo : tmpFromToList) {
             if (!fromTo.isEmpty()) {
                 if (result == null) {
-                    result = "";
+                    result = new StringBuilder();
                 }
-                result = result +
-                        fromTo.getFrom().getHour() + ":" + fromTo.getFrom().getMinute() +
-                        "-" +
-                        fromTo.getTo().getHour() + ":" + fromTo.getFrom().getMinute();
+                From from = fromTo.getFrom();
+                To to = fromTo.getTo();
+
+                result.append(from.getHour()).append(":").append(from.getMinute())
+                        .append("-")
+                        .append(to.getHour()).append(":").append(to.getMinute());
+
+                if (i != fromToList.size() - 1) {
+                    result.append(", ");
+                }
             }
         }
-        return result;
+        return result == null ? null : result.toString();
     }
 }
