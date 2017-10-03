@@ -1,22 +1,41 @@
 package com.company.model;
 
-import java.util.List;
+public class WeekDay implements Comparable<WeekDay> {
 
-public class WeekDay {
-    private SchedulerModel.DAYS_OF_WEEK dayOfWeek;
-    private List<FromTo> fromToList;
+    public static final String[] JSON_CODES = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
-    public WeekDay(SchedulerModel.DAYS_OF_WEEK dayOfWeek, List<FromTo> fromToList) {
-        this.dayOfWeek = dayOfWeek;
-        this.fromToList = fromToList;   //todo deep copy
+    private String jsonCode;
+    private String name;
+    private int value;
+
+    public WeekDay(String jsonCode, String name) {
+        this.jsonCode = jsonCode;
+        this.name = name;
     }
 
-    public SchedulerModel.DAYS_OF_WEEK getDayOfWeek() {
-        return dayOfWeek;
+    public void setValue(int value) {
+        this.value = value;
     }
 
-    public List<FromTo> getFromToList() {
-        return fromToList;
+    public String getJsonCode() {
+        return jsonCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "WeekDay{" +
+                "jsonCode='" + jsonCode + '\'' +
+                ", name='" + name + '\'' +
+                ", value=" + value +
+                '}';
     }
 
     @Override
@@ -26,22 +45,27 @@ public class WeekDay {
 
         WeekDay weekDay = (WeekDay) o;
 
-        if (dayOfWeek != weekDay.dayOfWeek) return false;
-        return fromToList != null ? fromToList.equals(weekDay.fromToList) : weekDay.fromToList == null;
+        if (value != weekDay.value) return false;
+        if (jsonCode != null ? !jsonCode.equals(weekDay.jsonCode) : weekDay.jsonCode != null) return false;
+        return name != null ? name.equals(weekDay.name) : weekDay.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = dayOfWeek != null ? dayOfWeek.hashCode() : 0;
-        result = 31 * result + (fromToList != null ? fromToList.hashCode() : 0);
+        int result = jsonCode != null ? jsonCode.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + value;
         return result;
     }
 
     @Override
-    public String toString() {
-        return "WeekDay{" +
-                "dayOfWeek=" + dayOfWeek +
-                ", fromToList=" + fromToList +
-                '}';
+    public int compareTo(WeekDay o) {
+        if (o.getValue() == this.getValue()) {
+            return 0;
+        } else if (o.getValue() > this.getValue()) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

@@ -10,6 +10,12 @@ import java.util.Set;
 
 public class SchedulerDeserializer implements JsonDeserializer<SchedulerModel> {
 
+    private SchedulerModel schedulerModel;
+
+    public SchedulerDeserializer(SchedulerModel schedulerModel) {
+        this.schedulerModel = schedulerModel;
+    }
+
     public SchedulerModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         Set<Map.Entry<String, JsonElement>> entriesDays = getDays(json);
 
@@ -37,36 +43,25 @@ public class SchedulerDeserializer implements JsonDeserializer<SchedulerModel> {
     }
 
     private SchedulerModel walkByDays(Iterable<? extends Map.Entry<String, JsonElement>> entriesDays) {
-        SchedulerModel schedulerModel = new SchedulerModel();
         Gson gson = new Gson();
 
         for (Map.Entry<String, JsonElement> entriesDay : entriesDays) {
             String key = entriesDay.getKey();
             JsonArray jsonArray = entriesDay.getValue().getAsJsonArray();
-            if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.MON.jsonCode)) {
-                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.MON, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.TUE.jsonCode)) {
-                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.TUE, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.WED.jsonCode)) {
-                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.WED, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.THU.jsonCode)) {
-                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.THU, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.FRI.jsonCode)) {
-                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.FRI, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.SAT.jsonCode)) {
-                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.SAT, jsonArrayToDayModel(gson, jsonArray));
-            } else if (key.contentEquals(SchedulerModel.DAYS_OF_WEEK.SUN.jsonCode)) {
-                schedulerModel.put(SchedulerModel.DAYS_OF_WEEK.SUN, jsonArrayToDayModel(gson, jsonArray));
+
+            for (String jsonCode : WeekDay.JSON_CODES) {
+                if (key.contentEquals(jsonCode)) {
+                    schedulerModel.put(key, jsonArrayToDayModel(gson, jsonArray));
+                }
             }
         }
         return schedulerModel;
     }
 
-    private DayModel jsonArrayToDayModel(Gson gson, JsonArray jsonArray) {
+    private List<FromTo> jsonArrayToDayModel(Gson gson, JsonArray jsonArray) {
         FromTo[] fromTos = gson.fromJson(jsonArray, FromTo[].class);
         List<FromTo> fromToList = Arrays.asList(fromTos);
-        DayModel day = new DayModel(fromToList);
-        return day;
+        return fromToList;
     }
 
 }

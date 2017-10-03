@@ -15,26 +15,27 @@ public class Main {
 
         Locale locale = Locale.getDefault();
 
-        ArrayList<DayOnWeek> days = getCorrectDaysInTrueOrder(locale);
-        for (DayOnWeek day : days) {
+        ArrayList<WeekDay> days = getCorrectDaysInTrueOrder(locale);
+        for (WeekDay day : days) {
             System.out.println("dayOfWeek = " + day);
         }
+
+        SchedulerModel schedulerModel = new SchedulerModel(days);
 
 
 //        getScheduleString(JsonStrings.JSON1);
 
     }
 
-    static ArrayList<DayOnWeek> getCorrectDaysInTrueOrder(Locale locale) {
-        ArrayList<DayOnWeek> daysOnWeek = new ArrayList<>(7);
+    static ArrayList<WeekDay> getCorrectDaysInTrueOrder(Locale locale) {
+        ArrayList<WeekDay> daysOnWeek = new ArrayList<>(7);
 
         DateFormatSymbols dfs = new DateFormatSymbols(locale);
         String[] weekdays = dfs.getShortWeekdays(); //short names. first element (index 0) is empty str. second always sunday.
-        String[] jsonCodes = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
-        for (int i = 1, j = 0; i < weekdays.length && j < jsonCodes.length; i++, j++) {
-            DayOnWeek dayOnWeek = new DayOnWeek(jsonCodes[j], weekdays[i]);
-            daysOnWeek.add(dayOnWeek);
+        for (int i = 1, j = 0; i < weekdays.length && j < WeekDay.JSON_CODES.length; i++, j++) {
+            WeekDay weekDay = new WeekDay(WeekDay.JSON_CODES[j], weekdays[i]);
+            daysOnWeek.add(weekDay);
         }
 
 
@@ -44,12 +45,12 @@ public class Main {
 
         int counter = 1;
         for (int dayIndex = firstDayIndex; dayIndex < daysOnWeek.size(); dayIndex++) {
-            DayOnWeek dayByIndex = daysOnWeek.get(dayIndex);
+            WeekDay dayByIndex = daysOnWeek.get(dayIndex);
             dayByIndex.setValue(counter);
             counter++;
         }
         for (int dayIndex = 0; dayIndex < firstDayIndex; dayIndex++) {
-            DayOnWeek dayByIndex = daysOnWeek.get(dayIndex);
+            WeekDay dayByIndex = daysOnWeek.get(dayIndex);
             dayByIndex.setValue(counter);
             counter++;
         }
@@ -67,12 +68,11 @@ public class Main {
         return parser.parse(schedulerModel);
     }
 
-    private static SchedulerModel parseJson(String jsonStr) {
+    private static SchedulerModel parseJson(SchedulerModel schedulerModel, String jsonStr) {
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(SchedulerModel.class, new SchedulerDeserializer())
+                .registerTypeAdapter(SchedulerModel.class, new SchedulerDeserializer(schedulerModel))
                 .create();
-        SchedulerModel schedulerModel = gson.fromJson(jsonStr, SchedulerModel.class);
-        return schedulerModel;
+        return gson.fromJson(jsonStr, SchedulerModel.class);
     }
 
 

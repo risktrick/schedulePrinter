@@ -7,15 +7,15 @@ import java.util.*;
 public class SchedulerParser {
 
     public String parse(SchedulerModel schedulerModel){
-        Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler = schedulerModel.getDays();
+        Map<WeekDay, ScheduleDay> daysMap = schedulerModel.getDaysMap();
 
         String result = null;
 
-        if (isDailyAroundTheClock(scheduler.values())) {
+        if (isDailyAroundTheClock(daysMap.values())) {
             result = Constants.ежедневно;
         }
 
-        String time = isOneTimeForAllDays(scheduler);
+        String time = isOneTimeForAllDays(daysMap);
         if (time != null) {
             result = Constants.ежедневно + " " + time;
         }
@@ -25,7 +25,7 @@ public class SchedulerParser {
         // в модели либо все дни и разное время,
         // либо не все дни (и возможно так же разное время)
         if (result == null) {
-            result = constructDaysStr(scheduler);
+            result = constructDaysStr(daysMap);
         }
 
         return result;
@@ -129,11 +129,11 @@ public class SchedulerParser {
         System.out.println("\n");
         System.out.println("constructDaysStr");
 
-        List<WeekDay> list = convert(scheduler);
+        List<ScheduleDay> list = convert(scheduler);
         System.out.println("list weekDays");
         list.forEach(System.out::println);
 
-        List<List<WeekDay>> byBuckets = groupByBuckets(list);
+        List<List<ScheduleDay>> byBuckets = groupByBuckets(list);
         System.out.println();
         System.out.println("byBuckets");
         byBuckets.forEach(System.out::println);
@@ -142,7 +142,7 @@ public class SchedulerParser {
         String result = "";
 
         for (int i = 0; i < byBuckets.size(); i++) {
-            List<WeekDay> bucket = byBuckets.get(i);
+            List<ScheduleDay> bucket = byBuckets.get(i);
             result +=  buildStr(bucket);    //In one bucket all days has equal listFromTo.
             if (i != byBuckets.size() - 1) {
                 result += ", ";
@@ -153,8 +153,8 @@ public class SchedulerParser {
         return result;
     }
 
-    private LinkedList<WeekDay> convert(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
-        LinkedList<WeekDay> list = new LinkedList<>();
+    private LinkedList<ScheduleDay> convert(Map<SchedulerModel.DAYS_OF_WEEK, DayModel> scheduler) {
+        LinkedList<ScheduleDay> list = new LinkedList<>();
         for (Map.Entry<SchedulerModel.DAYS_OF_WEEK, DayModel> entry : scheduler.entrySet()) {
             SchedulerModel.DAYS_OF_WEEK dayOfWeek = entry.getKey();
             List<FromTo> fromToList = null;
@@ -162,29 +162,29 @@ public class SchedulerParser {
                 fromToList = entry.getValue().getFromToList();
             }
 
-            WeekDay weekDay = new WeekDay(dayOfWeek, fromToList);
-            list.add(weekDay);
+            ScheduleDay scheduleDay = new ScheduleDay(dayOfWeek, fromToList);
+            list.add(scheduleDay);
         }
         return list;
     }
 
-    private List<List<WeekDay>> groupByBuckets(List<WeekDay> list) {
-        List<List<WeekDay>> byBuckets = new ArrayList<>();
+    private List<List<ScheduleDay>> groupByBuckets(List<ScheduleDay> list) {
+        List<List<ScheduleDay>> byBuckets = new ArrayList<>();
         List<FromTo> tmpFromToList;
         for (int i = 0; i < list.size(); i++) {
-            WeekDay weekDay = list.get(i);
+            ScheduleDay scheduleDay = list.get(i);
 
-            if (weekDay != null && weekDay.getFromToList() != null) {
-                tmpFromToList = new LinkedList<>(weekDay.getFromToList());  //save element fromToList for searching copies
+            if (scheduleDay != null && scheduleDay.getFromToList() != null) {
+                tmpFromToList = new LinkedList<>(scheduleDay.getFromToList());  //save element fromToList for searching copies
 
-                List<WeekDay> bucket = new LinkedList<>();
+                List<ScheduleDay> bucket = new LinkedList<>();
 
-                bucket.add(weekDay);    //insert to bucket element
+                bucket.add(scheduleDay);    //insert to bucket element
                 list.set(i, null);//instead of list.remove(i);         //rm element from src list
 
                 //search weekDays with equals fromToList. If found rm from src list and put to bucket.
                 for (int j = 0; j < list.size(); j++) {
-                    WeekDay day = list.get(j);
+                    ScheduleDay day = list.get(j);
                     if (day != null && day.getFromToList() != null && day.getFromToList().equals(tmpFromToList)) {
                         bucket.add(day);
                         list.set(j, null);  //instead of list.remove(j) cause we cant change size of list in loop by list
@@ -199,25 +199,25 @@ public class SchedulerParser {
 
     //In one bucket all days has equal listFromTo.
     //Here we just need add separator and build correct string. For time just use ListFromTo of any element
-    private String buildStr(List<WeekDay> bucket) {
+    private String buildStr(List<ScheduleDay> bucket) {
         StringBuilder resultStr = new StringBuilder();
 
         boolean flagInRange = false;
-        WeekDay currentDay;
-        WeekDay nextDay;
+        ScheduleDay currentDay;
+        ScheduleDay nextDay;
 
         for (int i = 0; i < bucket.size(); i++) {
             currentDay = bucket.get(i);
 
             if (flagInRange == false) {
-                resultStr.append(currentDay.getDayOfWeek().name);
+                resultStr.append(currentDay.getWeekDay().name);
             }
 
             //next element does not exist -> break
             if (i + 1 > bucket.size() - 1) {
                 if (flagInRange) {
                     resultStr.append("-");
-                    resultStr.append(currentDay.getDayOfWeek().name);
+                    resultStr.append(currentDay.getWeekDay().name);
                 }
                 break;
             }
@@ -225,7 +225,7 @@ public class SchedulerParser {
             nextDay = bucket.get(i + 1);
 
             //looking for the next element:difference is one -> set flagInRange
-            if (nextDay.getDayOfWeek().ordinal() - currentDay.getDayOfWeek().ordinal() == 1) {
+            if (nextDay.getWeekDay().ordinal() - currentDay.getWeekDay().ordinal() == 1) {
                 flagInRange = true;
             }
 
@@ -233,10 +233,10 @@ public class SchedulerParser {
             // if in range print current
             // else print ","
             // (else if last element nothing to print) - not need code
-            else if (nextDay.getDayOfWeek().ordinal() - currentDay.getDayOfWeek().ordinal() > 1) {
+            else if (nextDay.getWeekDay().ordinal() - currentDay.getWeekDay().ordinal() > 1) {
                 if (flagInRange) {
                     resultStr.append("-");
-                    resultStr.append(currentDay.getDayOfWeek().name);
+                    resultStr.append(currentDay.getWeekDay().name);
                     resultStr.append(", "); //because has next element
                     flagInRange = false;
                 } else {
